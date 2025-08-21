@@ -4,6 +4,14 @@ from datetime import datetime
 from calendar import monthrange
 import random
 
+# Page configuration
+st.set_page_config(
+    page_title="Movie Discovery Agent",
+    page_icon="🎬",
+    layout="wide",
+    initial_sidebar_state="expanded"
+)
+
 api_key = st.secrets["tmdb"]["api_key"]
 
 # Sidebar: TMDb API Key and year range config
@@ -20,7 +28,7 @@ max_year = st.sidebar.number_input("Max Year", min_value=min_year + 1, max_value
 if "year" not in st.session_state:
     st.session_state.year = default_max_year
 if "month" not in st.session_state:
-    st.session_state.month = 1
+    st.session_state.month = datetime.now().month
 
 def get_top_movies(year: int, month: int, api_key: str):
     start_date = f"{year}-{month:02d}-01"
@@ -43,7 +51,7 @@ def get_top_movies(year: int, month: int, api_key: str):
     return data.get("results", [])[:5]
 
 # Main UI
-st.title("🎬 Top 5 Movies by Month")
+st.title("🎬 Movie Discovery Agent")
 st.write("Select a year and month to see the most popular movies released during that time.")
 
 col1, col2 = st.columns(2)
