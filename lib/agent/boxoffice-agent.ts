@@ -62,7 +62,7 @@ export async function generateBoxOfficeDigest(
     {
       name: "get_now_playing_movies",
       description:
-        "Get a list of movies currently playing in theaters (US region). Returns up to 20 movies with title, overview, release date, popularity, and poster path.",
+        "Get a list of movies currently playing in theaters (US region). Returns up to 20 movies with title, overview, release date, popularity, and poster_path. Use poster_path to build image URLs: https://image.tmdb.org/t/p/w500{poster_path}",
       input_schema: {
         type: "object",
         properties: {},
@@ -82,7 +82,7 @@ export async function generateBoxOfficeDigest(
     {
       name: "get_movie_details",
       description:
-        "Get detailed information about a specific movie by ID, including budget, revenue, and status. Use this to enrich box office data with financial details.",
+        "Get detailed information about a specific movie by ID, including budget, revenue (box office gross), status, and poster_path. Use revenue to rank movies by box office performance. Build poster image URLs: https://image.tmdb.org/t/p/w500{poster_path}",
       input_schema: {
         type: "object",
         properties: {
@@ -111,20 +111,41 @@ export async function generateBoxOfficeDigest(
     },
   ];
 
-  const systemPrompt = `You are a box office analyst creating a newsletter-style digest of current movie performance.
+  const systemPrompt = `You are a box office analyst creating a newsletter-style digest of the week's top box office performers and upcoming releases.
 
 Your task:
-1. Use get_now_playing_movies to see what's currently in theaters
-2. Use get_upcoming_movies to check upcoming releases
-3. Use get_movie_details for revenue and budget data on notable films
-4. Produce a rich HTML digest with:
-   - Current movies in theaters ranked by popularity
-   - Revenue and budget analysis for top films
-   - Notable performances (high revenue vs budget ratio, etc.)
-   - Upcoming releases worth watching
-   - Trends and insights
+1. Use get_now_playing_movies to get current theatrical releases
+2. Use get_movie_details for EACH now-playing movie to get revenue and budget data
+3. Sort movies by revenue (box office gross) descending
+4. Select the TOP 5 movies by revenue only
+5. Use get_upcoming_movies to get upcoming releases for this/next week
+6. Produce a rich HTML digest with TWO sections:
 
-Format the output as concise, clean HTML. Keep total output under 3000 words. Focus on the top 10 movies only.`;
+HEADER:
+- Title "Box Office Digest" followed by today's date (e.g. "May 22, 2026") on the next line
+
+SECTION 1 — TOP 5 BOX OFFICE:
+For each movie, include:
+- Movie poster image using: <img src="https://image.tmdb.org/t/p/w500{poster_path}" alt="{title}" />
+- Title as a link to TMDb: <a href="https://www.themoviedb.org/movie/{id}">{title}</a>
+- Release date and rating
+- Box office revenue and budget figures
+- Brief analysis (performance vs budget, trends, notable achievements)
+
+SECTION 2 — UPCOMING THIS/NEXT WEEK:
+For each upcoming movie releasing in the next 7-14 days, include:
+- Movie poster image using: <img src="https://image.tmdb.org/t/p/w500{poster_path}" alt="{title}" />
+- Title as a link to TMDb: <a href="https://www.themoviedb.org/movie/{id}">{title}</a>
+- Release date
+- Brief description of what to expect
+
+Format rules:
+- Output clean, self-contained HTML with inline styles
+- Include poster images prominently for each movie
+- Every movie title must link to its TMDb page
+- Rank box office movies by revenue, NOT popularity
+- Keep output focused, under 2500 words
+- Dark theme styling (dark background, light text)`;
 
   const messages: any[] = [
     {
