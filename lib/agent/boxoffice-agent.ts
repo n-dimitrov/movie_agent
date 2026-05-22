@@ -4,6 +4,8 @@ import {
   getMovieDetails,
   searchMovies,
 } from "../tools";
+import { DigestData } from "../templates/digest-types";
+import { renderDigest } from "../templates/digest-template";
 
 interface ToolDef {
   name: string;
@@ -111,41 +113,49 @@ export async function generateBoxOfficeDigest(
     },
   ];
 
-  const systemPrompt = `You are a box office analyst creating a newsletter-style digest of the week's top box office performers and upcoming releases.
+  const systemPrompt = `You are a box office analyst. Your job is to gather movie data and return structured JSON.
 
 Your task:
 1. Use get_now_playing_movies to get current theatrical releases
 2. Use get_movie_details for EACH now-playing movie to get revenue and budget data
 3. Sort movies by revenue (box office gross) descending
 4. Select the TOP 5 movies by revenue only
-5. Use get_upcoming_movies to get upcoming releases for this/next week
-6. Produce a rich HTML digest with TWO sections:
+5. Use get_upcoming_movies to get upcoming releases for this/next week (next 7-14 days)
 
-HEADER:
-- Title "Box Office Digest" followed by today's date (e.g. "May 22, 2026") on the next line
+After gathering all data, output ONLY a valid JSON object with this exact structure (no markdown, no code blocks, no explanation):
 
-SECTION 1 — TOP 5 BOX OFFICE:
-For each movie, include:
-- Movie poster image using: <img src="https://image.tmdb.org/t/p/w500{poster_path}" alt="{title}" />
-- Title as a link to TMDb: <a href="https://www.themoviedb.org/movie/{id}">{title}</a>
-- Release date and rating
-- Box office revenue and budget figures
-- Brief analysis (performance vs budget, trends, notable achievements)
+{
+  "generatedDate": "May 22, 2026",
+  "topMovies": [
+    {
+      "id": 12345,
+      "title": "Movie Title",
+      "releaseDate": "May 15, 2026",
+      "posterPath": "/abc123.jpg",
+      "revenue": 150000000,
+      "budget": 80000000,
+      "rating": 7.5,
+      "analysis": "One or two sentences about box office performance, trends, or notable achievements."
+    }
+  ],
+  "upcomingMovies": [
+    {
+      "id": 67890,
+      "title": "Upcoming Movie",
+      "releaseDate": "May 29, 2026",
+      "posterPath": "/def456.jpg",
+      "description": "One or two sentences about what to expect from this film."
+    }
+  ]
+}
 
-SECTION 2 — UPCOMING THIS/NEXT WEEK:
-For each upcoming movie releasing in the next 7-14 days, include:
-- Movie poster image using: <img src="https://image.tmdb.org/t/p/w500{poster_path}" alt="{title}" />
-- Title as a link to TMDb: <a href="https://www.themoviedb.org/movie/{id}">{title}</a>
-- Release date
-- Brief description of what to expect
-
-Format rules:
-- Output clean, self-contained HTML with inline styles
-- Include poster images prominently for each movie
-- Every movie title must link to its TMDb page
-- Rank box office movies by revenue, NOT popularity
-- Keep output focused, under 2500 words
-- Dark theme styling (dark background, light text)`;
+Rules:
+- topMovies: exactly 5 movies, sorted by revenue descending
+- upcomingMovies: movies releasing in the next 7-14 days
+- posterPath: use the raw poster_path value from TMDb (e.g. "/abc123.jpg")
+- revenue and budget: raw numbers, not formatted strings
+- rating: vote_average from TMDb
+- Output ONLY the JSON object, nothing else`;
 
   const messages: any[] = [
     {
@@ -174,12 +184,18 @@ Format rules:
         (c: any) => c.type === "text"
       );
       if (textContent) {
-        let html = textContent.text;
-        const match = html.match(/```html?\s*\n([\s\S]*?)```/);
-        if (match) {
-          html = match[1].trim();
+        let raw = textContent.text.trim();
+        const codeBlockMatch = raw.match(/```(?:json)?\s*\n([\s\S]*?)```/);
+        if (codeBlockMatch) {
+          raw = codeBlockMatch[1].trim();
+        } else {
+          const jsonMatch = raw.match(/\{[\s\S]*"generatedDate"[\s\S]*\}$/);
+          if (jsonMatch) {
+            raw = jsonMatch[0];
+          }
         }
-        return html;
+        const digestData: DigestData = JSON.parse(raw);
+        return renderDigest(digestData);
       }
       throw new Error("Agent finished without producing text output");
     }
