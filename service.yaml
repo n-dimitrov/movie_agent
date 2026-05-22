@@ -26,3 +26,19 @@ spec:
           env:
             - name: TMDB_API_KEY
               value: PLACEHOLDER
+            - name: CLAUDE_CODE_USE_VERTEX
+              value: "1"
+            - name: CLOUD_ML_REGION
+              value: PLACEHOLDER
+            - name: ANTHROPIC_VERTEX_PROJECT_ID
+              value: PLACEHOLDER
+            - name: ANTHROPIC_VERTEX_BASE_URL
+              value: PLACEHOLDER
+            - name: CLAUDE_CODE_SKIP_VERTEX_AUTH
+              value: "1"
+            - name: ANTHROPIC_AUTH_TOKEN
+              value: PLACEHOLDER
+            - name: ANTHROPIC_MODEL
+              value: PLACEHOLDER
+            - name: GCS_BUCKET_NAME
+              value: PLACEHOLDER
