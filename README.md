@@ -1,76 +1,67 @@
-# 🎬 Movie Discovery Agent
+# Movie Discovery Agent
 
-A Streamlit-powered web application that helps you discover popular movies from any month and year using The Movie Database (TMDb) API.
+A web application for discovering popular movies from any month and year, powered by The Movie Database (TMDb) API.
 
-## ✨ Features
+## Features
 
-- **Time-based Discovery**: Find the top 5 most popular movies from any specific month and year
-- **Smart Defaults**: Automatically defaults to the current month and year for immediate relevance
-- **Random Discovery**: Get surprised with movies from a random time period
-- **Rich Movie Information**: View movie posters, ratings, release dates, and detailed overviews
-- **Responsive Design**: Wide layout optimized for displaying movie content
-- **Year Range Configuration**: Customizable year range (default: 1978 - current year)
+- **Time-based Discovery** — Find the top 5 most popular movies from any month and year
+- **Random Discovery** — Get surprised with movies from a random time period
+- **Rich Movie Cards** — Poster grid with hover overlays showing ratings, dates, and overviews
+- **Responsive Design** — Grid adapts from mobile to desktop
+- **Year Range Configuration** — Customizable year range (default: 1978 – current year)
+- **Secure API Key** — TMDb key stays server-side, never exposed to the browser
 
-## 🚀 Getting Started
+## Tech Stack
+
+- **Next.js** (App Router, TypeScript)
+- **Tailwind CSS**
+- **TMDb API v3**
+
+## Getting Started
 
 ### Prerequisites
 
-- Python 3.7+
-- TMDb API key (free registration at [themoviedb.org](https://www.themoviedb.org/))
+- Node.js 20+
+- TMDb API key ([themoviedb.org](https://www.themoviedb.org/))
 
 ### Installation
 
-1. Clone the repository:
 ```bash
 git clone https://github.com/n-dimitrov/movie_agent.git
 cd movie_agent
+npm install
 ```
 
-2. Install dependencies:
-```bash
-pip install -r requirements.txt
-```
+### Configuration
 
-3. Set up your TMDb API key:
-   - Create a `.streamlit` folder in the project root
-   - Create a `secrets.toml` file inside `.streamlit/`
-   - Add your API key:
-```toml
-[tmdb]
-api_key = "your_tmdb_api_key_here"
+Create a `.env` file in the project root:
+
+```
+TMDB_API_KEY=your_tmdb_api_key_here
 ```
 
 ### Running the App
 
 ```bash
-streamlit run app.py
+./start.sh
 ```
 
-The app will open in your default browser at `http://localhost:8501`
+Or manually:
 
-## 🎯 How to Use
+```bash
+npm run dev
+```
 
-1. **Configure Settings**: Use the sidebar to set your preferred year range
-2. **Select Time Period**: Choose a year and month to explore
-3. **Discover Movies**: Click "Get Movies" to see the top 5 popular movies from that period
-4. **Random Discovery**: Click the "🎲 Random" button for surprise recommendations
-5. **Explore Details**: View movie posters, ratings, and detailed information
+The app will be available at `http://localhost:3000`
 
-## 🛠️ Technical Details
+## How to Use
 
-- **Framework**: Streamlit
-- **API**: The Movie Database (TMDb) API v3
-- **Data**: Movie popularity, release dates, ratings, and metadata
-- **Layout**: Wide responsive design with expandable sidebar
+1. Select a year and month from the dropdowns
+2. Click **Get Movies** to see the top 5 popular movies from that period
+3. Click **Random** for surprise recommendations
+4. Hover over a movie card to see its overview
+5. Adjust the year range in the header controls
 
-## 📝 License
+## License
 
 This project is open source and available under the [MIT License](LICENSE).
-
-## 🤝 Contributing
-
-Contributions, issues, and feature requests are welcome! Feel free to check the [issues page](https://github.com/n-dimitrov/movie_agent/issues).
-
----
-
-**Note**: This application requires a valid TMDb API key. The API key should be kept secure and not committed to version control.
