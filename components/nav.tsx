@@ -4,8 +4,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const links = [
-  { href: "/", label: "Movie Discovery" },
-  { href: "/boxoffice", label: "Box Office Tracker" },
+  { href: "/", label: "Box Office Tracker" },
+  { href: "/discover", label: "Movie Discovery" },
 ];
 
 export function Nav() {

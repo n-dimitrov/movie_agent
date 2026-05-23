@@ -30,10 +30,6 @@ function escapeHtml(text: string): string {
 }
 
 function renderTopMovie(movie: TopMovie, rank: number): string {
-  const roi = movie.budget > 0
-    ? `${((movie.revenue / movie.budget) * 100).toFixed(0)}% ROI`
-    : "";
-
   return `
     <div class="movie-card" style="display:flex;gap:20px;margin-bottom:28px;padding:20px;background:#1e1e2e;border-radius:12px;border:1px solid #2a2a3e;">
       <div class="poster" style="flex-shrink:0;">
@@ -47,7 +43,7 @@ function renderTopMovie(movie: TopMovie, rank: number): string {
       </div>
       <div style="flex:1;min-width:0;">
         <h3 style="margin:0 0 8px 0;font-size:20px;">
-          <a href="${tmdbUrl(movie.id)}" style="color:#58a6ff;text-decoration:none;">${escapeHtml(movie.title)}</a>
+          <a href="${tmdbUrl(movie.id)}" style="color:#58a6ff;text-decoration:none;" target="_blank" rel="noopener noreferrer">${escapeHtml(movie.title)}</a>
         </h3>
         <div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:10px;font-size:14px;color:#8b8fa3;">
           <span>📅 ${escapeHtml(movie.releaseDate)}</span>
@@ -56,7 +52,6 @@ function renderTopMovie(movie: TopMovie, rank: number): string {
         <div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:12px;font-size:14px;">
           <span style="color:#4ade80;font-weight:600;">💰 ${formatCurrency(movie.revenue)}</span>
           ${movie.budget > 0 ? `<span style="color:#8b8fa3;">Budget: ${formatCurrency(movie.budget)}</span>` : ""}
-          ${roi ? `<span style="color:#facc15;">${roi}</span>` : ""}
         </div>
         <p style="margin:0;font-size:14px;color:#c9cdd6;line-height:1.5;">${escapeHtml(movie.overview)}</p>
       </div>
@@ -70,7 +65,7 @@ function renderUpcomingMovie(movie: UpcomingMovie): string {
            style="width:90px;border-radius:6px;box-shadow:0 2px 8px rgba(0,0,0,0.3);" />
       <div style="flex:1;min-width:0;">
         <h4 style="margin:0 0 6px 0;font-size:16px;">
-          <a href="${tmdbUrl(movie.id)}" style="color:#58a6ff;text-decoration:none;">${escapeHtml(movie.title)}</a>
+          <a href="${tmdbUrl(movie.id)}" style="color:#58a6ff;text-decoration:none;" target="_blank" rel="noopener noreferrer">${escapeHtml(movie.title)}</a>
         </h4>
         <div style="font-size:13px;color:#8b8fa3;margin-bottom:8px;">📅 ${escapeHtml(movie.releaseDate)}</div>
         <p style="margin:0;font-size:13px;color:#c9cdd6;line-height:1.4;">${escapeHtml(movie.overview)}</p>
