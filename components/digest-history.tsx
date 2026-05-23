@@ -14,7 +14,7 @@ export function DigestHistory({
 }: {
   digests: DigestMetadata[];
   loading: boolean;
-  onSelect: (id: string, url: string) => void;
+  onSelect: (id: string) => void;
   selectedId?: string;
 }) {
   const formatDate = (id: string) => {
@@ -29,40 +29,25 @@ export function DigestHistory({
     });
   };
 
-  if (loading) {
-    return (
-      <div className="bg-surface border border-border rounded-lg p-4">
-        <h3 className="text-lg font-semibold mb-3">Digest History</h3>
-        <p className="text-sm text-muted">Loading...</p>
-      </div>
-    );
-  }
+  if (loading || digests.length === 0) return null;
 
   return (
-    <div className="bg-surface border border-border rounded-lg p-4">
-      <h3 className="text-lg font-semibold mb-3">Digest History</h3>
-      {digests.length === 0 ? (
-        <p className="text-sm text-muted">No digests yet</p>
-      ) : (
-        <ul className="space-y-2">
-          {digests.map((digest) => (
-            <li key={digest.id}>
-              <button
-                onClick={() => onSelect(digest.id, digest.url)}
-                className={`w-full text-left px-3 py-2 rounded transition-colors ${
-                  selectedId === digest.id
-                    ? "bg-accent text-white"
-                    : "bg-surface-hover hover:bg-border text-foreground"
-                }`}
-              >
-                <span className="text-sm font-medium block">
-                  {formatDate(digest.id)}
-                </span>
-              </button>
-            </li>
-          ))}
-        </ul>
-      )}
-    </div>
+    <select
+      value={selectedId ?? ""}
+      onChange={(e) => {
+        const digest = digests.find((d) => d.id === e.target.value);
+        if (digest) onSelect(digest.id);
+      }}
+      className="bg-surface-hover text-foreground border border-border rounded-lg px-3 py-2 text-sm"
+    >
+      <option value="" disabled>
+        Select digest...
+      </option>
+      {digests.map((digest) => (
+        <option key={digest.id} value={digest.id}>
+          {formatDate(digest.id)}
+        </option>
+      ))}
+    </select>
   );
 }

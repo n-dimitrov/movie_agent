@@ -35,8 +35,8 @@ function renderTopMovie(movie: TopMovie, rank: number): string {
     : "";
 
   return `
-    <div style="display:flex;gap:20px;margin-bottom:28px;padding:20px;background:#1e1e2e;border-radius:12px;border:1px solid #2a2a3e;">
-      <div style="flex-shrink:0;">
+    <div class="movie-card" style="display:flex;gap:20px;margin-bottom:28px;padding:20px;background:#1e1e2e;border-radius:12px;border:1px solid #2a2a3e;">
+      <div class="poster" style="flex-shrink:0;">
         <div style="position:relative;">
           <img src="${posterUrl(movie.posterPath)}" alt="${escapeHtml(movie.title)}"
                style="width:140px;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,0.4);" />
@@ -65,7 +65,7 @@ function renderTopMovie(movie: TopMovie, rank: number): string {
 
 function renderUpcomingMovie(movie: UpcomingMovie): string {
   return `
-    <div style="display:flex;gap:16px;margin-bottom:20px;padding:16px;background:#1e1e2e;border-radius:10px;border:1px solid #2a2a3e;">
+    <div class="upcoming-card" style="display:flex;gap:16px;margin-bottom:20px;padding:16px;background:#1e1e2e;border-radius:10px;border:1px solid #2a2a3e;">
       <img src="${posterUrl(movie.posterPath)}" alt="${escapeHtml(movie.title)}"
            style="width:90px;border-radius:6px;box-shadow:0 2px 8px rgba(0,0,0,0.3);" />
       <div style="flex:1;min-width:0;">
@@ -93,6 +93,15 @@ export function renderDigest(data: DigestData): string {
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Box Office Digest — ${escapeHtml(data.generatedDate)}</title>
+  <style>
+    @media (max-width: 480px) {
+      .movie-card { flex-direction: column !important; }
+      .movie-card .poster img { width: 100% !important; max-width: 200px !important; }
+      .movie-card .poster { flex-shrink: unset !important; }
+      .upcoming-card { flex-direction: column !important; }
+      .upcoming-card img { width: 100% !important; max-width: 140px !important; }
+    }
+  </style>
 </head>
 <body style="margin:0;padding:0;background:#121220;color:#e4e4ef;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">
   <div style="max-width:720px;margin:0 auto;padding:32px 20px;">
@@ -117,7 +126,7 @@ export function renderDigest(data: DigestData): string {
     </div>
 
     <div style="text-align:center;padding-top:20px;border-top:1px solid #2a2a3e;font-size:12px;color:#555;">
-      Powered by TMDb &amp; Claude AI
+      Powered by TMDb
     </div>
 
   </div>
