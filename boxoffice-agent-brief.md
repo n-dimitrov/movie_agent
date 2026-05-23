@@ -1,0 +1,3 @@
+# Box Office Tracker Agent — Concept Brief
+
+Build an agent using the Claude Agent SDK that fetches and summarizes current movie box office standings and upcoming releases. The agent would pull data from sources like Box Office Mojo and The Numbers, and enrich it with movie details and poster images from TMDB (The Movie Database API) using a developer key. Claude would highlight trends, notable performances (big openers, surprise hits, flops), and compile a rich visual newsletter-style digest. Over time, the agent could be extended to track specific movies the user cares about, compare opening weekends to predictions, and maintain a running log of the year's top grossers.
