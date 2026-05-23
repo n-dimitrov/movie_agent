@@ -58,7 +58,7 @@ function renderTopMovie(movie: TopMovie, rank: number): string {
           ${movie.budget > 0 ? `<span style="color:#8b8fa3;">Budget: ${formatCurrency(movie.budget)}</span>` : ""}
           ${roi ? `<span style="color:#facc15;">${roi}</span>` : ""}
         </div>
-        <p style="margin:0;font-size:14px;color:#c9cdd6;line-height:1.5;">${escapeHtml(movie.analysis)}</p>
+        <p style="margin:0;font-size:14px;color:#c9cdd6;line-height:1.5;">${escapeHtml(movie.overview)}</p>
       </div>
     </div>`;
 }
@@ -73,7 +73,7 @@ function renderUpcomingMovie(movie: UpcomingMovie): string {
           <a href="${tmdbUrl(movie.id)}" style="color:#58a6ff;text-decoration:none;">${escapeHtml(movie.title)}</a>
         </h4>
         <div style="font-size:13px;color:#8b8fa3;margin-bottom:8px;">📅 ${escapeHtml(movie.releaseDate)}</div>
-        <p style="margin:0;font-size:13px;color:#c9cdd6;line-height:1.4;">${escapeHtml(movie.description)}</p>
+        <p style="margin:0;font-size:13px;color:#c9cdd6;line-height:1.4;">${escapeHtml(movie.overview)}</p>
       </div>
     </div>`;
 }
@@ -104,7 +104,7 @@ export function renderDigest(data: DigestData): string {
 
     <div style="margin-bottom:40px;">
       <h2 style="font-size:22px;color:#ffffff;margin:0 0 20px;padding-bottom:10px;border-bottom:2px solid #2a2a3e;">
-        🏆 Top 5 Box Office
+        🏆 Top 10 Box Office
       </h2>
       ${topMoviesHtml}
     </div>

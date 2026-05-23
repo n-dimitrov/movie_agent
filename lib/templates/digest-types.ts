@@ -6,7 +6,7 @@ export interface TopMovie {
   revenue: number;
   budget: number;
   rating: number;
-  analysis: string;
+  overview: string;
 }
 
 export interface UpcomingMovie {
@@ -14,7 +14,7 @@ export interface UpcomingMovie {
   title: string;
   releaseDate: string;
   posterPath: string;
-  description: string;
+  overview: string;
 }
 
 export interface DigestData {
