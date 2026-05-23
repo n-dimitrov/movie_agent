@@ -42,3 +42,5 @@ spec:
               value: PLACEHOLDER
             - name: GCS_BUCKET_NAME
               value: PLACEHOLDER
+            - name: APP_BASE_URL
+              value: https://movie-agent-389635339946.us-central1.run.app
