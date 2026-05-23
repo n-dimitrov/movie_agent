@@ -2,7 +2,7 @@ import { getNowPlayingMovies, getUpcomingMovies, getMovieDetails } from "../tool
 import { DigestData } from "../templates/digest-types";
 import { renderDigest } from "../templates/digest-template";
 
-export async function generateBoxOfficeDigest(): Promise<string> {
+export async function generateBoxOfficeDigest(): Promise<{ data: DigestData; html: string }> {
   const [nowPlaying, upcoming] = await Promise.all([
     getNowPlayingMovies(),
     getUpcomingMovies(),
