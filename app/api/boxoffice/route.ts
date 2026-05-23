@@ -1,37 +1,29 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { generateBoxOfficeDigest } from "@/lib/agent/boxoffice-agent";
-import { uploadDigest, listDigests, generateShareableUrl } from "@/lib/storage/gcs";
+import { uploadDigest, listDigests } from "@/lib/storage/gcs";
+import { renderEmailDigest } from "@/lib/templates/email-template";
 
-export async function POST(request: NextRequest) {
+export async function POST() {
   try {
-    const content = await generateBoxOfficeDigest();
+    const { data, html } = await generateBoxOfficeDigest();
 
     let id: string;
-    let url: string;
-
     try {
-      id = await uploadDigest(content);
-      try {
-        url = await generateShareableUrl(id);
-      } catch {
-        const host = request.headers.get("host") || "localhost:3001";
-        const protocol = host.startsWith("localhost") ? "http" : "https";
-        url = `${protocol}://${host}/api/boxoffice/${id}`;
-      }
+      id = await uploadDigest(html);
     } catch {
       id = new Date().toISOString().slice(0, 10).replace(/-/g, "");
-      const host = request.headers.get("host") || "localhost:3001";
-      const protocol = host.startsWith("localhost") ? "http" : "https";
-      url = `${protocol}://${host}/api/boxoffice/${id}`;
     }
 
-    return NextResponse.json({ id, url, content });
+    const appBaseUrl = process.env.APP_BASE_URL || "http://localhost:3001";
+    const emailHtml = renderEmailDigest(data, appBaseUrl);
+
+    return NextResponse.json({ id, content: html, emailHtml });
   } catch (error) {
     console.error("Box office digest generation failed:", error);
     return NextResponse.json(
       {
         error: "Failed to generate box office digest",
-        details: error instanceof Error ? error.message : String(error)
+        details: error instanceof Error ? error.message : String(error),
       },
       { status: 502 }
     );

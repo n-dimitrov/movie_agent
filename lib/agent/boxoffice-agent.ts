@@ -58,5 +58,5 @@ export async function generateBoxOfficeDigest(): Promise<string> {
   });
 
   const digestData: DigestData = { generatedDate, topMovies, upcomingMovies };
-  return renderDigest(digestData);
+  return { data: digestData, html: renderDigest(digestData) };
 }
