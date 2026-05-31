@@ -41,7 +41,8 @@ function renderMovieCard(movie: TopMovie, rank: number): string {
       <div style="font-size:11px;font-weight:bold;color:#e50914;margin-bottom:2px;">#${rank}</div>
       <a href="${tmdbUrl(movie.id)}" style="font-size:16px;font-weight:700;color:#333;text-decoration:none;">${escapeHtml(movie.title)}</a>
       <div style="margin-top:6px;font-size:13px;color:#666;">
-        <span style="color:#16a34a;font-weight:700;">${formatCurrency(movie.revenue)}</span>
+        ${movie.dailyGross ? `<span style="color:#16a34a;font-weight:700;">Daily: ${formatCurrency(movie.dailyGross)}</span>` : ""}
+        ${movie.totalGross ? `&nbsp;&middot;&nbsp; Total: ${formatCurrency(movie.totalGross)}` : `<span style="color:#16a34a;font-weight:700;">${formatCurrency(movie.revenue)}</span>`}
         &nbsp;&middot;&nbsp; ⭐ ${movie.rating.toFixed(1)}
       </div>
     </td>

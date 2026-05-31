@@ -7,6 +7,11 @@ export interface TopMovie {
   budget: number;
   rating: number;
   overview: string;
+  dailyGross?: number;
+  theaters?: number;
+  theaterAverage?: number;
+  totalGross?: number;
+  daysInRelease?: number;
 }
 
 export interface UpcomingMovie {
