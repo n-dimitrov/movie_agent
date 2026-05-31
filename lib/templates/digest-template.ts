@@ -49,9 +49,9 @@ function renderTopMovie(movie: TopMovie, rank: number): string {
         </div>
       </div>
       <div class="stats-bar" style="display:flex;border-top:1px solid #2a2a3e;font-size:13px;text-align:center;">
-        ${movie.dailyGross ? `<div style="flex:1;padding:10px;border-right:1px solid #2a2a3e;">
-          <div style="color:#8b8fa3;margin-bottom:2px;">Daily</div>
-          <div style="color:#4ade80;font-weight:700;">${formatCurrency(movie.dailyGross)}</div>
+        ${movie.gross ? `<div style="flex:1;padding:10px;border-right:1px solid #2a2a3e;">
+          <div style="color:#8b8fa3;margin-bottom:2px;">${movie.grossLabel || "Gross"}</div>
+          <div style="color:#4ade80;font-weight:700;">${formatCurrency(movie.gross)}</div>
         </div>` : ""}
         <div style="flex:1;padding:10px;border-right:1px solid #2a2a3e;">
           <div style="color:#8b8fa3;margin-bottom:2px;">Revenue</div>

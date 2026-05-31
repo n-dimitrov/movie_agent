@@ -3,9 +3,11 @@ import { generateBoxOfficeDigest } from "@/lib/agent/boxoffice-agent";
 import { uploadDigest, listDigests } from "@/lib/storage/gcs";
 import { renderEmailDigest } from "@/lib/templates/email-template";
 
-export async function POST() {
+export async function POST(request: Request) {
   try {
-    const { data, html } = await generateBoxOfficeDigest();
+    const url = new URL(request.url);
+    const mode = url.searchParams.get("mode") === "daily" ? "daily" : "weekly";
+    const { data, html } = await generateBoxOfficeDigest(mode);
 
     let id: string;
     try {

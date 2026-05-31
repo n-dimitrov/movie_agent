@@ -7,7 +7,8 @@ export interface TopMovie {
   budget: number;
   rating: number;
   overview: string;
-  dailyGross?: number;
+  gross?: number;
+  grossLabel?: string;
   theaters?: number;
   theaterAverage?: number;
   totalGross?: number;

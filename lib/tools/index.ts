@@ -8,5 +8,8 @@ export {
 
 export {
   getDailyBoxOffice,
+  getWeeklyBoxOffice,
+  getBoxOffice,
   type BoxOfficeEntry,
+  type BoxOfficeMode,
 } from "./boxoffice-scraper";

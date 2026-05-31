@@ -1,9 +1,9 @@
-import { getNowPlayingMovies, getUpcomingMovies, getMovieDetails, searchMovies, getDailyBoxOffice } from "../tools";
+import { getNowPlayingMovies, getUpcomingMovies, getMovieDetails, searchMovies, getBoxOffice, type BoxOfficeMode } from "../tools";
 import { DigestData, TopMovie } from "../templates/digest-types";
 import { renderDigest } from "../templates/digest-template";
 
-async function generateFromTheNumbers(): Promise<TopMovie[]> {
-  const entries = await getDailyBoxOffice();
+async function generateFromTheNumbers(mode: BoxOfficeMode): Promise<TopMovie[]> {
+  const entries = await getBoxOffice(mode);
   if (entries.length === 0) throw new Error("No box office entries found");
 
   const topMovies: TopMovie[] = await Promise.all(
@@ -43,7 +43,8 @@ async function generateFromTheNumbers(): Promise<TopMovie[]> {
         budget,
         rating,
         overview,
-        dailyGross: entry.dailyGross,
+        gross: entry.gross,
+        grossLabel: mode === "weekly" ? "Weekly" : "Daily",
         theaters: entry.theaters,
         theaterAverage: entry.theaterAverage,
         totalGross: entry.totalGross,
@@ -83,11 +84,11 @@ async function generateFromTMDb(): Promise<TopMovie[]> {
     }));
 }
 
-export async function generateBoxOfficeDigest(): Promise<{ data: DigestData; html: string }> {
+export async function generateBoxOfficeDigest(mode: BoxOfficeMode = "weekly"): Promise<{ data: DigestData; html: string }> {
   let topMovies: TopMovie[];
 
   try {
-    topMovies = await generateFromTheNumbers();
+    topMovies = await generateFromTheNumbers(mode);
   } catch (err) {
     console.warn("The Numbers scrape failed, falling back to TMDb:", err);
     topMovies = await generateFromTMDb();
