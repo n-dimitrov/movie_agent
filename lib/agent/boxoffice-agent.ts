@@ -15,6 +15,8 @@ async function generateFromTheNumbers(mode: BoxOfficeMode): Promise<TopMovie[]> 
       let budget = 0;
       let revenue = 0;
       let releaseDate = "";
+      let director = "";
+      let cast: string[] = [];
 
       try {
         const results = await searchMovies(entry.title);
@@ -30,6 +32,8 @@ async function generateFromTheNumbers(mode: BoxOfficeMode): Promise<TopMovie[]> 
             const details = await getMovieDetails(match.id);
             budget = details.budget ?? 0;
             revenue = details.revenue ?? 0;
+            director = details.credits?.crew.find(c => c.job === "Director")?.name ?? "";
+            cast = details.credits?.cast.slice(0, 3).map(c => c.name) ?? [];
           } catch {}
         }
       } catch {}
@@ -43,6 +47,8 @@ async function generateFromTheNumbers(mode: BoxOfficeMode): Promise<TopMovie[]> 
         budget,
         rating,
         overview,
+        director: director || undefined,
+        cast: cast.length > 0 ? cast : undefined,
         gross: entry.gross,
         grossLabel: mode === "weekly" ? "Weekly" : "Daily",
         theaters: entry.theaters,
@@ -64,7 +70,7 @@ async function generateFromTMDb(): Promise<TopMovie[]> {
       try {
         return await getMovieDetails(movie.id);
       } catch {
-        return { ...movie, budget: 0, revenue: 0, status: "Unknown" };
+        return { ...movie, budget: 0, revenue: 0, status: "Unknown", credits: undefined };
       }
     })
   );
@@ -79,6 +85,8 @@ async function generateFromTMDb(): Promise<TopMovie[]> {
       posterPath: m.poster_path ?? "",
       revenue: m.revenue ?? 0,
       budget: m.budget ?? 0,
+      director: m.credits?.crew.find(c => c.job === "Director")?.name || undefined,
+      cast: m.credits?.cast.slice(0, 3).map(c => c.name) || undefined,
       rating: m.vote_average,
       overview: m.overview,
     }));
@@ -101,19 +109,34 @@ export async function generateBoxOfficeDigest(mode: BoxOfficeMode = "weekly"): P
   const nextWeek = new Date(today);
   nextWeek.setDate(nextWeek.getDate() + 7);
 
-  const upcomingMovies = upcoming
+  const upcomingFiltered = upcoming
     .filter((m) => {
       const release = new Date(m.release_date);
       return release >= today && release <= nextWeek;
     })
-    .sort((a, b) => new Date(a.release_date).getTime() - new Date(b.release_date).getTime())
-    .map((m) => ({
-      id: m.id,
-      title: m.title,
-      releaseDate: m.release_date,
-      posterPath: m.poster_path ?? "",
-      overview: m.overview,
-    }));
+    .sort((a, b) => new Date(a.release_date).getTime() - new Date(b.release_date).getTime());
+
+  const upcomingMovies = await Promise.all(
+    upcomingFiltered.map(async (m) => {
+      let director: string | undefined;
+      let cast: string[] | undefined;
+      try {
+        const details = await getMovieDetails(m.id);
+        director = details.credits?.crew.find(c => c.job === "Director")?.name || undefined;
+        cast = details.credits?.cast.slice(0, 3).map(c => c.name);
+        if (cast?.length === 0) cast = undefined;
+      } catch {}
+      return {
+        id: m.id,
+        title: m.title,
+        releaseDate: m.release_date,
+        posterPath: m.poster_path ?? "",
+        overview: m.overview,
+        director,
+        cast,
+      };
+    })
+  );
 
   const generatedDate = new Date().toLocaleDateString("en-US", {
     month: "long",

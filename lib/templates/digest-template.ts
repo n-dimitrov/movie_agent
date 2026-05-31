@@ -44,7 +44,10 @@ function renderTopMovie(movie: TopMovie, rank: number): string {
           <h3 style="margin:0 0 6px;font-size:19px;">
             <a href="${tmdbUrl(movie.id)}" style="color:#58a6ff;text-decoration:none;" target="_blank" rel="noopener noreferrer">${escapeHtml(movie.title)}</a>
           </h3>
-          <div style="font-size:13px;color:#8b8fa3;margin-bottom:8px;">${escapeHtml(movie.releaseDate)}</div>
+          <div style="font-size:13px;color:#8b8fa3;margin-bottom:6px;">
+            ${escapeHtml(movie.releaseDate)}${movie.director ? ` &middot; ${escapeHtml(movie.director)}` : ""}
+          </div>
+          ${movie.cast?.length ? `<div style="font-size:12px;color:#9ca3af;margin-bottom:8px;">${movie.cast.map(escapeHtml).join(", ")}</div>` : ""}
           <p style="margin:0;font-size:13px;color:#a0a4b8;line-height:1.5;">${escapeHtml(movie.overview)}</p>
         </div>
       </div>
@@ -78,7 +81,10 @@ function renderUpcomingMovie(movie: UpcomingMovie): string {
         <h4 style="margin:0 0 6px 0;font-size:16px;">
           <a href="${tmdbUrl(movie.id)}" style="color:#58a6ff;text-decoration:none;" target="_blank" rel="noopener noreferrer">${escapeHtml(movie.title)}</a>
         </h4>
-        <div style="font-size:13px;color:#8b8fa3;margin-bottom:8px;">${escapeHtml(movie.releaseDate)}</div>
+        <div style="font-size:13px;color:#8b8fa3;margin-bottom:6px;">
+          ${escapeHtml(movie.releaseDate)}${movie.director ? ` &middot; ${escapeHtml(movie.director)}` : ""}
+        </div>
+        ${movie.cast?.length ? `<div style="font-size:12px;color:#9ca3af;margin-bottom:6px;">${movie.cast.map(escapeHtml).join(", ")}</div>` : ""}
         <p style="margin:0;font-size:13px;color:#c9cdd6;line-height:1.4;">${escapeHtml(movie.overview)}</p>
       </div>
     </div>`;

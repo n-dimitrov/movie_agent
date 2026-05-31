@@ -7,6 +7,8 @@ export interface TopMovie {
   budget: number;
   rating: number;
   overview: string;
+  director?: string;
+  cast?: string[];
   gross?: number;
   grossLabel?: string;
   theaters?: number;
@@ -21,6 +23,8 @@ export interface UpcomingMovie {
   releaseDate: string;
   posterPath: string;
   overview: string;
+  director?: string;
+  cast?: string[];
 }
 
 export interface DigestData {

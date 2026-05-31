@@ -13,10 +13,25 @@ interface TMDbResponse {
   results: Movie[];
 }
 
+interface TMDbCastMember {
+  name: string;
+  character: string;
+  order: number;
+}
+
+interface TMDbCrewMember {
+  name: string;
+  job: string;
+}
+
 interface TMDbMovieDetailsResponse extends Movie {
   budget: number;
   revenue: number;
   status: string;
+  credits?: {
+    cast: TMDbCastMember[];
+    crew: TMDbCrewMember[];
+  };
 }
 
 async function tmdbFetch(endpoint: string, params: URLSearchParams): Promise<any> {
@@ -65,7 +80,9 @@ export async function getUpcomingMovies(): Promise<Movie[]> {
 }
 
 export async function getMovieDetails(movieId: number): Promise<TMDbMovieDetailsResponse> {
-  const params = new URLSearchParams();
+  const params = new URLSearchParams({
+    append_to_response: "credits",
+  });
   const data: TMDbMovieDetailsResponse = await tmdbFetch(`/movie/${movieId}`, params);
   return data;
 }
