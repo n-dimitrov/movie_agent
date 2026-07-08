@@ -31,6 +31,8 @@ export async function getTopMovies(
     "primary_release_date.gte": startDate,
     "primary_release_date.lte": endDate,
     sort_by: "popularity.desc",
+    "vote_count.gte": "50",
+    include_adult: "false",
     page: "1",
   });
 
