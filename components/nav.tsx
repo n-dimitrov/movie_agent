@@ -11,6 +11,9 @@ const links = [
 export function Nav() {
   const pathname = usePathname();
 
+  // Project21 is a standalone page reached only by direct link.
+  if (pathname === "/project21") return null;
+
   return (
     <nav className="bg-surface border-b border-border px-6 py-2 flex gap-4">
       {links.map(({ href, label }) => (
